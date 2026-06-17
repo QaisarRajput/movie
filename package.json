@@ -2,7 +2,7 @@
   "name": "site_server",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://hubs.dpdns.org",
+  "homepage": "https://movie.hubs.dpdns.org",
   "dependencies": {
     "@chakra-ui/react": "^1.6.3",
     "@emotion/react": "^11.4.0",
