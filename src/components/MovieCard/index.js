@@ -27,7 +27,7 @@ const MovieCard = ({ img, title, year, rating, isLoading, aspect, id }) => {
   return (
     <VStack
       cursor="pointer"
-      onClick={() => history.push("?movie_id=" + id)}
+      onClick={() => history.push(`/movie/${id}`)}
       align="start"
       _hover={{ transform: "scale(1.05)" }}
       transition=".25s ease-in-out"

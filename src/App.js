@@ -36,6 +36,7 @@ const App = () => {
           <GridItem colSpan={{ base: 5, md: 4 }}>
             <Switch>
               <Route exact path="/" component={Home} />
+              <Route exact path="/movie/:id" component={Home} />
               <Route path="/movies/" component={Movies} />
             </Switch>
           </GridItem>

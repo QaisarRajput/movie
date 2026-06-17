@@ -27,7 +27,7 @@ const MovieCard = ({ img, title, year, rating, isLoading, aspect, id }) => {
   return (
     <VStack
       cursor="pointer"
-      onClick={() => history.push("?movie_id=" + id)}
+      onClick={() => history.push(`/movie/${id}`)}
       align="start"
       _hover={{ transform: "scale(1.05)" }}
       transition=".25s ease-in-out"
@@ -45,16 +45,16 @@ const MovieCard = ({ img, title, year, rating, isLoading, aspect, id }) => {
         </AspectRatio>
       </Skeleton>
       <Skeleton maxW="full" isLoaded={!isLoading}>
-        <Heading maxW="full" as="h3" fontSize="md" isTruncated title={title}>
+        <Heading maxW="full" as="h3" fontSize="xs" isTruncated title={title}>
           {title}
         </Heading>
       </Skeleton>
       <Skeleton width="min" isLoaded={!isLoading}>
-        <HStack width="full" align="center">
+        <HStack width="full" align="center" fontSize="xs">
           {year > 0 && <Text>{year}</Text>}
           <Box
             as={AiFillStar}
-            fontSize="20px"
+            fontSize="10px"
             color={useColorModeValue("green.500", "green.200")}
           />
           <Text
@@ -62,6 +62,7 @@ const MovieCard = ({ img, title, year, rating, isLoading, aspect, id }) => {
             display="flex"
             dir="row"
             fontWeight="semibold"
+            fontSize="xs"
           >
             {rating > 0 ? rating.toFixed(1) + " / 10" : "No rating"}
           </Text>

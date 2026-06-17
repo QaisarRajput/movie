@@ -1,6 +1,7 @@
 import {
   AspectRatio,
   Box,
+  Button,
   Center,
   Divider,
   GridItem,
@@ -11,13 +12,18 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Link as ChakraLink,
+  List,
+  ListItem,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
   Spinner,
+  Text,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
@@ -33,6 +39,7 @@ import API_BASE_URL from "../../config";
 
 const Navbar = ({ toggleSideNav }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isHelpOpen, onOpen: onHelpOpen, onClose: onHelpClose } = useDisclosure();
   const [SearchTerm, setSearchTerm] = useState("");
   const history = useHistory();
 
@@ -61,6 +68,9 @@ const Navbar = ({ toggleSideNav }) => {
             icon={<GoPerson />}
           ></IconButton>
           <ColorModeToggle />
+          <Button size="md" onClick={onHelpOpen} display={{ base: "none", sm: "inline-flex" }}>
+            How to download
+          </Button>
           <IconButton
             onClick={toggleSideNav}
             display={{ base: "flex", md: "none" }}
@@ -106,7 +116,7 @@ const Navbar = ({ toggleSideNav }) => {
                       <Divider mb={3} />
                       <HStack
                         cursor="pointer"
-                        onClick={() => history.push("?movie_id=" + val.id)}
+                        onClick={() => history.push(`/movie/${val.id}`)}
                         spacing={6}
                       >
                         <AspectRatio ratio={2 / 3} w="10%" objectFit="cover">
@@ -131,6 +141,43 @@ const Navbar = ({ toggleSideNav }) => {
                 <Spinner />
               </Center>
             )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isHelpOpen} onClose={onHelpClose}>
+        <ModalOverlay />
+        <ModalContent rounded="xl" p={3} mx={3}>
+          <ModalHeader>How to download</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing={4} align="start">
+              <Text>
+                Use the magnet links on this site with a torrent client to download movies.
+              </Text>
+              <List spacing={3}>
+                <ListItem>
+                  <strong>Step 1:</strong> Download a torrent client such as{' '}
+                  <ChakraLink href="https://www.qbittorrent.org/download" color="teal.500" isExternal>
+                    qBittorrent
+                  </ChakraLink>.
+                </ListItem>
+                <ListItem>
+                  <strong>Step 2:</strong> Browse the site, choose a movie you like, and click the magnet link.
+                </ListItem>
+                <ListItem>
+                  <strong>Step 3:</strong> Open the magnet link with your torrent client, then confirm the prompt and click OK to start downloading.
+                </ListItem>
+                <ListItem>
+                  <strong>Step 4:</strong> Keep seeding for at least one day after the download finishes so other users can benefit too.
+                </ListItem>
+                <ListItem>
+                  For mobile, you can use{' '}
+                  <ChakraLink href="https://play.google.com/store/apps/details?id=com.utorrent.client&hl=en" color="teal.500" isExternal>
+                    uTorrent
+                  </ChakraLink>.
+                </ListItem>
+              </List>
+            </VStack>
           </ModalBody>
         </ModalContent>
       </Modal>

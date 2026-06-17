@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import {
   Modal,
   ModalOverlay,
@@ -36,14 +37,13 @@ import MagnetUrl from "./MagnetUrl";
 const MovieDetails = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const useQuery = () => {
-    return new URLSearchParams(useLocation().search);
-  };
-
-  const query = useQuery();
+  const location = useLocation();
   const history = useHistory();
 
-  const id = query.get("movie_id");
+  const query = new URLSearchParams(location.search);
+  const searchMovieId = query.get("movie_id");
+  const pathMovieIdMatch = location.pathname.match(/^\/movie\/(\d+)/);
+  const id = searchMovieId || (pathMovieIdMatch ? pathMovieIdMatch[1] : null);
 
   useEffect(() => {
     if (id) {
@@ -53,6 +53,7 @@ const MovieDetails = () => {
 
   const handleClose = () => {
     history.replace({
+      pathname: "/",
       search: "",
     });
     onClose();
@@ -78,6 +79,8 @@ const MovieDetails = () => {
     setIsLoading(true);
   }, [id]);
 
+  const currentUrl = typeof window !== "undefined" ? window.location.href : "https://movie.hubs.dpdns.org";
+
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="2xl">
       <ModalOverlay />
@@ -86,7 +89,54 @@ const MovieDetails = () => {
         <ModalCloseButton />
         <ModalBody pb={3}>
           {response && (
-            <VStack spacing={6}>
+            <>
+              <Helmet>
+                <title>{response.data.movie["title_long"]} | Movie Download Online</title>
+                <meta
+                  name="description"
+                  content={
+                    response.data.movie["description_full"] ||
+                    response.data.movie["summary_long"] ||
+                    "Download movies with magnet links from Movie Download Online."
+                  }
+                />
+                <meta property="og:title" content={response.data.movie["title_long"]} />
+                <meta
+                  property="og:description"
+                  content={
+                    response.data.movie["description_full"] ||
+                    response.data.movie["summary_long"] ||
+                    "Download movies with magnet links from Movie Download Online."
+                  }
+                />
+                <meta
+                  property="og:image"
+                  content={
+                    response.data.movie["large_cover_image"] ||
+                    response.data.movie["medium_cover_image"]
+                  }
+                />
+                <meta property="og:url" content={currentUrl} />
+                <meta property="og:type" content="video.movie" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={response.data.movie["title_long"]} />
+                <meta
+                  name="twitter:description"
+                  content={
+                    response.data.movie["description_full"] ||
+                    response.data.movie["summary_long"] ||
+                    "Download movies with magnet links from Movie Download Online."
+                  }
+                />
+                <meta
+                  name="twitter:image"
+                  content={
+                    response.data.movie["large_cover_image"] ||
+                    response.data.movie["medium_cover_image"]
+                  }
+                />
+              </Helmet>
+              <VStack spacing={6}>
               <Stack
                 direction={{ base: "column", sm: "row" }}
                 w="full"
@@ -229,14 +279,16 @@ const MovieDetails = () => {
               <Heading as="h3" fontSize="lg" align="left" w="full">
                 Suggested Movies
               </Heading>
-              <SuggestedMovies id={query.get("movie_id")} />
+              <SuggestedMovies id={id} />
             </VStack>
+            </>
           )}
           {isLoading && (
             <Center w="full" pb={3}>
               <Spinner />
             </Center>
           )}
+          
         </ModalBody>
       </ModalContent>
     </Modal>

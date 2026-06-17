@@ -35,26 +35,21 @@ const RecentlyAdded = () => {
       <Stack
         w="full"
         spacing={{ base: 3, lg: 6 }}
-        direction={{ base: "row", lg: "column" }}
-        align={{ base: "center", sm: "start" }}
+        direction={{ base: "column", lg: "column" }}
+        align={{ base: "start", sm: "start" }}
       >
         <Heading
-          whiteSpace="nowrap"
-          textTransform={{ base: "none", lg: "uppercase" }}
+          textTransform="uppercase"
           as="h4"
-          fontSize={{ base: "2xl", lg: "md" }}
+          fontSize={{ base: "lg", lg: "md" }}
         >
           Recently Added
         </Heading>
         <Box as="hr" w="full" />
       </Stack>
-      <SimpleGrid
-        columns={{ base: 1, xs: 2, sm: 3, lg: 1 }}
-        spacing={6}
-        w="full"
-      >
+      <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4} w="full">
         {response &&
-          response.data.movies.slice(0, 8).map((val, key) => {
+          response.data.movies.slice(0, 16).map((val, key) => {
             return (
               <GridItem key={key} w="full">
                 <MovieCardSmall

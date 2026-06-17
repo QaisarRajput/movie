@@ -49,7 +49,7 @@ const ReleaseCard = ({ show, title, img, id, youtube }) => {
         </Heading>
         <Button
           size="sm"
-          onClick={() => history.push("?movie_id=" + id)}
+          onClick={() => history.push(`/movie/${id}`)}
           colorScheme="green"
           boxShadow="dark-lg"
         >
