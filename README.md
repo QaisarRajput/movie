@@ -20,7 +20,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://movie.world.qd.je">
+  <a href="https://hubs.dpdns.org">
     <img src="public/favicons/logo-light.png" alt="Movie Download Online Logo" width="320" height="120">
   </a>
 
@@ -29,10 +29,10 @@
   <p align="center">
     A free, ad-free movie download catalog for local network media workflows.
     <br />
-    <a href="https://movie.world.qd.je"><strong>Visit the site »</strong></a>
+    <a href="https://hubs.dpdns.org"><strong>Visit the site »</strong></a>
     <br />
     <br />
-    <a href="https://movie.world.qd.je">Live Site</a>
+    <a href="https://hubs.dpdns.org">Live Site</a>
     &middot;
     <a href="https://github.com/QaisarRajput/movie/issues/new?labels=bug&template=bug-report.md">Report Bug</a>
     &middot;
@@ -122,7 +122,7 @@ This project includes a GitHub Actions workflow for deploying to GitHub Pages.
 
 Current custom domain:
 
-- `movie.world.qd.je`
+- `hubs.dpdns.org`
 
 If the API endpoint changes, update `src/config.js` or set `REACT_APP_API_BASE_URL`.
 
