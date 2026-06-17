@@ -1,11 +1,12 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import useAPIrequest from "../../../adapters/useAPIrequest";
+import API_BASE_URL from "../../../config";
 import MovieCard from "./../../MovieCard";
 
 const SuggestedMovies = ({ id }) => {
   const { response } = useAPIrequest(
-    "https://yts.mx/api/v2/movie_suggestions.json?movie_id=" + id,
+    `${API_BASE_URL}/movie_suggestions.json?movie_id=${id}`,
   );
 
   const [isLoading, setIsLoading] = useState(true);

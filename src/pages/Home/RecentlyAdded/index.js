@@ -12,11 +12,12 @@ import {
 import React, { useEffect, useState } from "react";
 import MovieCardSmall from "../../../components/MovieCardSmall";
 import useAPIrequest from "../../../adapters/useAPIrequest";
+import API_BASE_URL from "../../../config";
 import { Link } from "react-router-dom";
 
 const RecentlyAdded = () => {
   const { response } = useAPIrequest(
-    "https://yts.mx/api/v2/list_movies.json?sort_by=date_added",
+    `${API_BASE_URL}/list_movies.json?sort_by=date_added`,
   );
 
   const [isLoading, setIsLoading] = useState(true);

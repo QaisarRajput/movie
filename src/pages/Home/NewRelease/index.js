@@ -5,10 +5,11 @@ import { GoPrimitiveDot } from "react-icons/go";
 import ReleaseCard from "./ReleaseCard";
 import ReleaseHeader from "./ReleaseHeader";
 import useAPIrequest from "../../../adapters/useAPIrequest";
+import API_BASE_URL from "../../../config";
 
 const NewRelease = () => {
   const { response } = useAPIrequest(
-    "https://yts.mx/api/v2/list_movies.json?sort_by=year",
+    `${API_BASE_URL}/list_movies.json?sort_by=year`,
   );
 
   const [isLoading, setIsLoading] = useState(true);

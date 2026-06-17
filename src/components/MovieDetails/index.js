@@ -24,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { useHistory, useLocation } from "react-router-dom";
 import useAPIrequest from "../../adapters/useAPIrequest";
+import API_BASE_URL from "../../config";
 import { IoTime } from "react-icons/io5";
 import { AiFillLike, AiFillStar } from "react-icons/ai";
 import { FaDownload, FaLanguage } from "react-icons/fa";
@@ -58,7 +59,7 @@ const MovieDetails = () => {
   };
 
   const { response } = useAPIrequest(
-    "https://yts.mx/api/v2/movie_details.json?movie_id=" + id,
+    `${API_BASE_URL}/movie_details.json?movie_id=${id}`,
   );
 
   const starColor = useColorModeValue("green.500", "green.200");

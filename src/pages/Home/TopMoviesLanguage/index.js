@@ -1,66 +1,92 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import MovieCard from "../../../components/MovieCard";
 import TopMoviesHeader from "./TopMoviesHeader";
+import API_BASE_URL from "../../../config";
 import { Center, GridItem, SimpleGrid, Spinner, VStack } from "@chakra-ui/react";
+
+const ITEMS_PER_PAGE = 6;
+const MAX_PAGES = 3;
+const MAX_MOVIES = ITEMS_PER_PAGE * MAX_PAGES;
+const MAX_API_PAGES = 20;
 
 const TopMoviesLanguage = ({ language }) => {
   const [page, setPage] = useState(1);
-  const [lastpage, setLastPage] = useState(1);
-  const [currentPage, setcurrentPage] = useState(1);
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchMovies();
-  }, [page]); // Fetch movies whenever currentPage changes
+    let isMounted = true;
+    const loadLanguageMovies = async () => {
+      setIsLoading(true);
+      setPage(1);
 
-  const fetchMovies = async () => {
-    setIsLoading(true);
-    let fetchedMovies = [];
-    let currentPage_ = currentPage;
-    // Keep fetching until we have enough movies or reach the end
-    while (fetchedMovies.length < 6) {
-      const response = await fetch(
-        `https://yts.mx/api/v2/list_movies.json?sort_by=year&limit=50&page=${currentPage_}`
-      );
-      const data = await response.json();
-      const filteredMovies = data.data.movies.filter(
-        (movie) => movie.language === language
-      );
-      fetchedMovies = fetchedMovies.concat(filteredMovies);
+      let collected = [];
+      const seenIds = new Set();
+      let apiPage = 1;
 
-      if (fetchedMovies.length == 6)
-      {
-        break;
+      while (collected.length < MAX_MOVIES && apiPage <= MAX_API_PAGES) {
+        try {
+          const response = await fetch(
+            `${API_BASE_URL}/list_movies.json?sort_by=year&limit=50&page=${apiPage}`
+          );
+
+          if (!response.ok) {
+            break;
+          }
+
+          const data = await response.json();
+          const pageMovies = data?.data?.movies ?? [];
+
+          const filteredMovies = pageMovies.filter(
+            (movie) => movie.language === language && !seenIds.has(movie.id)
+          );
+
+          filteredMovies.forEach((movie) => {
+            seenIds.add(movie.id);
+            collected.push(movie);
+          });
+
+          apiPage += 1;
+        } catch (error) {
+          console.error("TopMoviesLanguage fetch error:", error);
+          break;
+        }
       }
 
-      if (lastpage <= page)
-      {
-        console.log("going forward");
-        currentPage_++;
-      }
-      else
-      {
-        console.log("going back");
-        currentPage_--;
-      }
-      
+      if (!isMounted) return;
+      setMovies(collected.slice(0, MAX_MOVIES));
+      setIsLoading(false);
+    };
+
+    loadLanguageMovies();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [language]);
+
+  const totalPages = useMemo(
+    () => Math.max(1, Math.min(MAX_PAGES, Math.ceil(movies.length / ITEMS_PER_PAGE))),
+    [movies.length]
+  );
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
     }
-    // console.log("Current Page :" + currentPage_ + " Page :" + page + " LastPage : " + lastpage + " LastCurrentPage :" +lastcurrentPage)
-    setcurrentPage(currentPage_);
-    setLastPage(page);
-    setMovies(fetchedMovies.slice(0, 6)); // Take the first 6 movies
-    setIsLoading(false);
-  };
+  }, [page, totalPages]);
 
-
+  const visibleMovies = useMemo(
+    () => movies.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE),
+    [movies, page]
+  );
 
   return (
     <VStack py={6}>
       <TopMoviesHeader
         setPage={setPage}
         page={page}
-        setIsLoading={setIsLoading}
+        maxPage={totalPages}
         language={language}
       />
       <SimpleGrid
@@ -69,7 +95,7 @@ const TopMoviesLanguage = ({ language }) => {
         row={2}
         spacing={6}
       >
-        {movies.map((val, key) => (
+        {visibleMovies.map((val, key) => (
           <GridItem key={key}>
             <MovieCard
               img={val.medium_cover_image}

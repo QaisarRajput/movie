@@ -27,6 +27,28 @@ const useWidnowLocation = () => {
     title = "Recently Added";
     type = "date_added";
     genreFromURL = null;
+  } else if (location.pathname.startsWith("/movies/language/")) {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const languageSegment = parts[2] || "";
+    const languageLabel = toProperCase(languageSegment);
+    const languageCode =
+      languageSegment === "hindi"
+        ? "hi"
+        : languageSegment === "french"
+        ? "fr"
+        : languageSegment;
+
+    title = `${languageLabel} Movies`;
+    type = "year";
+    genreFromURL = null;
+
+    return {
+      title,
+      type,
+      genreFromURL,
+      languageFromURL: languageCode,
+      languageLabel,
+    };
   } else if (location.pathname === "/movies/all") {
     title = "All Movies";
     type = "all";
@@ -36,7 +58,7 @@ const useWidnowLocation = () => {
     genreFromURL = location.pathname.split("/").pop();
   }
 
-  return { title, type, genreFromURL };
+  return { title, type, genreFromURL, languageFromURL: null, languageLabel: "" };
 };
 
 export default useWidnowLocation;

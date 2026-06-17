@@ -12,11 +12,18 @@ import { GoPrimitiveDot } from "react-icons/go";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const TopMoviesHeader = ({ setPage, page, setIsLoading, language }) => {
+const TopMoviesHeader = ({ setPage, page, maxPage, language }) => {
+  const isFirstPage = page === 1;
+  const isLastPage = page >= maxPage;
+
   const handlePageNav = (dir) => {
-    setIsLoading(true);
     setPage(page + dir);
   };
+
+  const languageLabel =
+    language === "hi" ? "Hindi" : language === "fr" ? "French" : "English";
+
+  const pageDots = Array.from({ length: Math.max(1, Math.min(3, maxPage)) });
 
   return (
     <Stack
@@ -27,29 +34,24 @@ const TopMoviesHeader = ({ setPage, page, setIsLoading, language }) => {
       spacing={6}
     >
       <Heading whiteSpace="nowrap" as="h2" fontSize="2xl">
-        Top{" "}
-        {language === "hi"
-          ? "Hindi"
-          : language === "fr"
-          ? "French"
-          : "English"}
+        Top {languageLabel}
       </Heading>
       <Divider w="full" />
       <HStack w={{ base: "full", sm: "min" }}>
         <HStack spacing={0}>
-          {[...Array(6)].map((e, i) => (
+          {pageDots.map((_, i) => (
             <GoPrimitiveDot key={i} opacity={i + 1 === page ? 1 : 0.3} />
           ))}
         </HStack>
         <Spacer display={{ base: "block", sm: "none" }} />
         <IconButton
           onClick={() => handlePageNav(-1)}
-          isDisabled={page === 0 ? true : false}
+          isDisabled={isFirstPage}
           size="sm"
           icon={<FaArrowLeft />}
         />
 
-        {page < 6 && (
+        {!isLastPage && (
           <IconButton
             onClick={() => handlePageNav(+1)}
             size="sm"
@@ -57,16 +59,16 @@ const TopMoviesHeader = ({ setPage, page, setIsLoading, language }) => {
           />
         )}
 
-        {page === 6 && (
+        {page === maxPage && (
           <Button
             as={Link}
             to={
-              "/movies/" +
+              "/movies/language/" +
               (language === "hi"
-                ? "Hindi"
+                ? "hindi"
                 : language === "fr"
-                ? "French"
-                : "English")
+                ? "french"
+                : "english")
             }
             size="sm"
             rightIcon={<FaArrowRight />}

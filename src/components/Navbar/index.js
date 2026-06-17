@@ -21,16 +21,15 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { ImVideoCamera } from "react-icons/im";
-import { Logo } from "react-icons/im";
 import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { IoMenu, IoSearchSharp } from "react-icons/io5";
+import { GoPerson } from "react-icons/go";
 import ColorModeToggle from "./ColorModeToggle";
 import LogoModeToggle from "./LogoModeToggle";
-import { Link, useHistory } from "react-router-dom";
 import InputAsButton from "./InputAsButton";
-import { IoMenu, IoSearchSharp } from "react-icons/io5";
 import useAPIrequest from "../../adapters/useAPIrequest";
-import { GoPerson } from "react-icons/go";
+import API_BASE_URL from "../../config";
 
 const Navbar = ({ toggleSideNav }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,8 +37,7 @@ const Navbar = ({ toggleSideNav }) => {
   const history = useHistory();
 
   const { response } = useAPIrequest(
-    "https://yts.mx/api/v2/list_movies.json?query_term=" +
-      SearchTerm.toLowerCase()
+    `${API_BASE_URL}/list_movies.json?query_term=${SearchTerm.toLowerCase()}`
   );
 
   return (

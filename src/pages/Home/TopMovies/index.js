@@ -9,15 +9,13 @@ import React, { useEffect, useState } from "react";
 import MovieCard from "../../../components/MovieCard";
 import TopMoviesHeader from "./TopMoviesHeader";
 import useAPIrequest from "../../../adapters/useAPIrequest";
+import API_BASE_URL from "../../../config";
 
 const TopMovies = ({ type }) => {
   const [page, setPage] = useState(1);
 
   const { response } = useAPIrequest(
-    "https://yts.mx/api/v2/list_movies.json?sort_by=" +
-      type +
-      "&limit=6&page=" +
-      page,
+    `${API_BASE_URL}/list_movies.json?sort_by=${type}&limit=6&page=${page}`,
   );
 
   const [isLoading, setIsLoading] = useState(true);

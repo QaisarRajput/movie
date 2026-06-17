@@ -2,7 +2,7 @@
   "name": "site_server",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://moviedownload.online",
+  "homepage": "https://movie.world.qd.je",
   "dependencies": {
     "@chakra-ui/react": "^1.6.3",
     "@emotion/react": "^11.4.0",
