@@ -4,11 +4,12 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { GoPrimitiveDot } from "react-icons/go";
 import ReleaseCard from "./ReleaseCard";
 import ReleaseHeader from "./ReleaseHeader";
+import ErrorMessage from "../../../components/ErrorMessage";
 import useAPIrequest from "../../../adapters/useAPIrequest";
 import API_BASE_URL from "../../../config";
 
 const NewRelease = () => {
-  const { response } = useAPIrequest(
+  const { response, error } = useAPIrequest(
     `${API_BASE_URL}/list_movies.json?sort_by=year`,
   );
 
@@ -66,6 +67,7 @@ const NewRelease = () => {
   return (
     <VStack>
       <ReleaseHeader />
+      {error ? <ErrorMessage title="New releases are unavailable" /> : null}
       <Skeleton rounded="xl" isLoaded={!isLoading} w="full">
         <Center overflow="hidden" w="full" pos="relative">
           {slides.map((item, key) => {

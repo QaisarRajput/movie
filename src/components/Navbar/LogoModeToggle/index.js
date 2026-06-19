@@ -1,5 +1,4 @@
 import { useColorMode } from "@chakra-ui/react";
-import { GridItem, HStack, Link } from "@chakra-ui/react";
 import React from "react";
 
 const Logo = ({ colorMode }) => {

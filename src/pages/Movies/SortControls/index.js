@@ -14,6 +14,9 @@ import toProperCase from "../../../functions/toProperCase";
 import React from "react";
 
 const SortControls = ({
+  quality,
+  genre,
+  orderBy,
   rating,
   setQuality,
   setGenre,
@@ -29,6 +32,7 @@ const SortControls = ({
           placeholder="Order By"
           size="sm"
           rounded="lg"
+          value={orderBy}
           onChange={(e) => setOrderBy(e.target.value)}
         >
           <option value="desc">Descending</option>
@@ -39,8 +43,10 @@ const SortControls = ({
           placeholder="Quality"
           size="sm"
           rounded="lg"
+          value={quality}
           onChange={(e) => setQuality(e.target.value)}
         >
+          <option value="all">All Qualities</option>
           <option value="720p">720p</option>
           <option value="1080p">1080p</option>
           <option value="2160p">2160p</option>
@@ -50,11 +56,12 @@ const SortControls = ({
           <Select
             variant="filled"
             placeholder="Genre"
-            defaultValue="all"
+            value={genre}
             size="sm"
             rounded="lg"
             onChange={(e) => setGenre(e.target.value)}
           >
+            <option value="all">All Genres</option>
             {categories.map((val, key) => {
               return (
                 <option value={val} key={key}>
@@ -69,10 +76,11 @@ const SortControls = ({
         <Text>Rating</Text>
         <Slider
           colorScheme="green"
-          defaultValue={0}
+          value={rating}
           min={0}
           max={9}
           step={1}
+          onChange={(val) => setRating(val)}
           onChangeEnd={(val) => setRating(val)}
         >
           <SliderTrack>
@@ -81,7 +89,7 @@ const SortControls = ({
           </SliderTrack>
           <SliderThumb boxSize={4} />
         </Slider>
-        <Text>{rating}+</Text>
+        <Text>{rating === 0 ? "Any" : `${rating}+`}</Text>
       </HStack>
     </Stack>
   );

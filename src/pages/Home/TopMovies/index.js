@@ -5,8 +5,9 @@ import {
   Spinner,
   VStack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import MovieCard from "../../../components/MovieCard";
+import ErrorMessage from "../../../components/ErrorMessage";
 import TopMoviesHeader from "./TopMoviesHeader";
 import useAPIrequest from "../../../adapters/useAPIrequest";
 import API_BASE_URL from "../../../config";
@@ -14,28 +15,21 @@ import API_BASE_URL from "../../../config";
 const TopMovies = ({ type }) => {
   const [page, setPage] = useState(1);
 
-  const { response } = useAPIrequest(
+  const { response, error, loading } = useAPIrequest(
     `${API_BASE_URL}/list_movies.json?sort_by=${type}&limit=6&page=${page}`,
   );
-
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (response && response !== null) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-    }
-  }, [response]);
 
   return (
     <VStack py={6}>
       <TopMoviesHeader
         setPage={setPage}
         page={page}
-        setIsLoading={setIsLoading}
+        setIsLoading={() => {}}
         type={type}
       />
+      {error ? (
+        <ErrorMessage title="Top movies are unavailable" />
+      ) : null}
       <SimpleGrid
         w="full"
         columns={{ base: 1, xs: 2, sm: 3 }}
@@ -50,14 +44,15 @@ const TopMovies = ({ type }) => {
                   img={val["medium_cover_image"]}
                   title={val["title_english"]}
                   year={val["year"]}
-                  isLoading={isLoading}
+                  slug={val["slug"]}
+                  isLoading={loading}
                   rating={val["rating"]}
                   id={val["id"]}
                 />
               </GridItem>
             );
           })}
-        {isLoading && (
+        {loading && (
           <GridItem as={Center} colSpan={3}>
             <Spinner />
           </GridItem>

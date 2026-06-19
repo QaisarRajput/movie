@@ -2,11 +2,10 @@ import { IconButton, Button, ButtonGroup, Box } from "@chakra-ui/react";
 import React from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const Pagination = ({ setPage, page, setIsLoading, movie_count, limit }) => {
+const Pagination = ({ setPage, page, movie_count, limit }) => {
   const totalPages = Math.ceil(movie_count / limit);
 
   const handlePageNav = (dir) => {
-    setIsLoading(true);
     setPage(page + dir);
   };
 

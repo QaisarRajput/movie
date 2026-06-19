@@ -11,11 +11,12 @@ import {
 import { Fade } from "@chakra-ui/react";
 import { FaPlay } from "react-icons/fa";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import YoutubeEmbedded from "../../../../components/YoutubeEmbedded";
+import { getMoviePathFromParts } from "../../../../functions/movieUrl";
 
 const ReleaseCard = ({ show, title, img, id, youtube }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -29,7 +30,7 @@ const ReleaseCard = ({ show, title, img, id, youtube }) => {
       color="white"
     >
       <AspectRatio ratio={{ base: 4 / 3, sm: 16 / 9 }}>
-        <Image rounded="xl" src={img} />
+        <Image rounded="xl" src={img} loading="lazy" />
       </AspectRatio>
       <Center
         as={VStack}
@@ -49,7 +50,7 @@ const ReleaseCard = ({ show, title, img, id, youtube }) => {
         </Heading>
         <Button
           size="sm"
-          onClick={() => history.push(`/movie/${id}`)}
+          onClick={() => navigate(getMoviePathFromParts({ id, title }))}
           colorScheme="green"
           boxShadow="dark-lg"
         >

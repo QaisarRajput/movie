@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import MovieCard from "../../../components/MovieCard";
+import ErrorMessage from "../../../components/ErrorMessage";
 import TopMoviesHeader from "./TopMoviesHeader";
-import API_BASE_URL from "../../../config";
-import { Center, GridItem, SimpleGrid, Spinner, VStack } from "@chakra-ui/react";
+import fetchYtsWithMirrors from "../../../adapters/fetchYtsWithMirrors";
+import { Center, GridItem, SimpleGrid, Spinner, Text, VStack } from "@chakra-ui/react";
 
 const ITEMS_PER_PAGE = 6;
 const MAX_PAGES = 3;
@@ -13,11 +14,13 @@ const TopMoviesLanguage = ({ language }) => {
   const [page, setPage] = useState(1);
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
     const loadLanguageMovies = async () => {
       setIsLoading(true);
+      setError(null);
       setPage(1);
 
       let collected = [];
@@ -26,15 +29,9 @@ const TopMoviesLanguage = ({ language }) => {
 
       while (collected.length < MAX_MOVIES && apiPage <= MAX_API_PAGES) {
         try {
-          const response = await fetch(
-            `${API_BASE_URL}/list_movies.json?sort_by=year&limit=50&page=${apiPage}`
+          const data = await fetchYtsWithMirrors(
+            `/list_movies.json?sort_by=year&limit=50&page=${apiPage}`
           );
-
-          if (!response.ok) {
-            break;
-          }
-
-          const data = await response.json();
           const pageMovies = data?.data?.movies ?? [];
 
           const filteredMovies = pageMovies.filter(
@@ -48,7 +45,7 @@ const TopMoviesLanguage = ({ language }) => {
 
           apiPage += 1;
         } catch (error) {
-          console.error("TopMoviesLanguage fetch error:", error);
+          setError(error);
           break;
         }
       }
@@ -89,6 +86,12 @@ const TopMoviesLanguage = ({ language }) => {
         maxPage={totalPages}
         language={language}
       />
+      {error ? <ErrorMessage title="Language movies are unavailable" /> : null}
+      {!isLoading ? (
+        <Text fontSize="sm" color="gray.500" alignSelf="start">
+          Showing best matches from the first {MAX_API_PAGES} result pages.
+        </Text>
+      ) : null}
       <SimpleGrid
         w="full"
         columns={{ base: 1, xs: 2, sm: 3 }}
@@ -101,6 +104,7 @@ const TopMoviesLanguage = ({ language }) => {
               img={val.medium_cover_image}
               title={val.title_english}
               year={val.year}
+              slug={val.slug}
               isLoading={isLoading}
               rating={val.rating}
               id={val.id}
@@ -112,6 +116,11 @@ const TopMoviesLanguage = ({ language }) => {
             <Spinner />
           </GridItem>
         )}
+        {!isLoading && movies.length === 0 ? (
+          <GridItem as={Center} colSpan={3} color="gray.500" py={8}>
+            No movies found for this language in the scanned catalog window.
+          </GridItem>
+        ) : null}
       </SimpleGrid>
     </VStack>
   );

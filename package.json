@@ -4,19 +4,18 @@
   "private": true,
   "homepage": "https://movie.hubs.dpdns.org",
   "dependencies": {
-    "@chakra-ui/react": "^1.6.3",
-    "@emotion/react": "^11.4.0",
-    "@emotion/styled": "^11.3.0",
+    "@chakra-ui/react": "^2.10.7",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "axios": "^1.6.7",
-    "framer-motion": "^4.1.17",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "framer-motion": "^10.18.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-ga4": "^2.1.0",
     "react-helmet": "^6.1.0",
     "react-icons": "^4.2.0",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.1",
-    "styled-components": "^5.3.0"
+    "react-router-dom": "^6.26.2",
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start --openssl-legacy-provider",

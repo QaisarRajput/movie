@@ -9,26 +9,17 @@ import {
   SimpleGrid,
   Stack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import MovieCardSmall from "../../../components/MovieCardSmall";
+import ErrorMessage from "../../../components/ErrorMessage";
 import useAPIrequest from "../../../adapters/useAPIrequest";
 import API_BASE_URL from "../../../config";
 import { Link } from "react-router-dom";
 
 const RecentlyAdded = () => {
-  const { response } = useAPIrequest(
+  const { response, error, loading } = useAPIrequest(
     `${API_BASE_URL}/list_movies.json?sort_by=date_added`,
   );
-
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (response && response !== null) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-    }
-  }, [response]);
 
   return (
     <VStack spacing={6} align="start" py={6}>
@@ -47,6 +38,7 @@ const RecentlyAdded = () => {
         </Heading>
         <Box as="hr" w="full" />
       </Stack>
+      {error ? <ErrorMessage title="Recently added is unavailable" /> : null}
       <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4} w="full">
         {response &&
           response.data.movies.slice(0, 16).map((val, key) => {
@@ -54,10 +46,10 @@ const RecentlyAdded = () => {
               <GridItem key={key} w="full">
                 <MovieCardSmall
                   img={val["medium_cover_image"]}
-                  
                   title={val["title_english"]}
                   year={val["year"]}
-                  isLoading={isLoading}
+                  slug={val["slug"]}
+                  isLoading={loading}
                   rating={val["rating"]}
                   id={val["id"]}
                 />
@@ -70,7 +62,7 @@ const RecentlyAdded = () => {
           View More
         </Button>
       )}
-      {isLoading && (
+      {loading && (
         <Center w="full">
           <Spinner />
         </Center>

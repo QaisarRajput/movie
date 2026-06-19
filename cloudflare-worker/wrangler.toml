@@ -1,0 +1,21 @@
+name = "movie-social-preview"
+main = "src/index.js"
+compatibility_date = "2026-06-19"
+workers_dev = true
+
+[vars]
+APP_ORIGIN = "https://movie.hubs.dpdns.org"
+YTS_API_BASE = "https://yts.gg/api/v2"
+DEFAULT_OG_IMAGE = "https://movie.hubs.dpdns.org/cover.png"
+SEO_DEBUG_ENDPOINT_ENABLED = "true"
+SEO_DEBUG_LOGS = "false"
+
+[env.production]
+workers_dev = false
+
+[env.production.vars]
+APP_ORIGIN = "https://movie.hubs.dpdns.org"
+YTS_API_BASE = "https://yts.gg/api/v2"
+DEFAULT_OG_IMAGE = "https://movie.hubs.dpdns.org/cover.png"
+SEO_DEBUG_ENDPOINT_ENABLED = "true"
+SEO_DEBUG_LOGS = "false"

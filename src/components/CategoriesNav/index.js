@@ -134,4 +134,4 @@ const CategoriesNav = ({ isOpen, toggleSideNav, setIsOpen }) => {
   );
 };
 
-export default CategoriesNav;
+export default React.memo(CategoriesNav);

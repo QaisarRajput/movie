@@ -1,13 +1,18 @@
-import { Container, GridItem, SimpleGrid } from "@chakra-ui/react";
-import { useState } from "react";
-import { HashRouter, Route, Switch , BrowserRouter} from "react-router-dom";
+import { Center, Container, GridItem, SimpleGrid, Spinner } from "@chakra-ui/react";
+import React, { Suspense, lazy, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CategoriesNav from "./components/CategoriesNav";
 import Footer from "./components/Footer";
-import MovieDetails from "./components/MovieDetails";
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Movies from "./pages/Movies";
+import ScrollToTop from "./components/ScrollToTop";
+import BackToTop from "./components/BackToTop";
 import ReactGA from "react-ga4";
+
+const Home = lazy(() => import("./pages/Home"));
+const Movies = lazy(() => import("./pages/Movies"));
+const Watchlist = lazy(() => import("./pages/Watchlist"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const MovieDetails = lazy(() => import("./components/MovieDetails"));
 
 ReactGA.initialize("G-Z090Q2W49P");
 
@@ -17,6 +22,12 @@ const App = () => {
   const toggleSideNav = () => {
     setIsOpen(!isOpen);
   };
+
+  const fallback = (
+    <Center py={12} w="full">
+      <Spinner />
+    </Center>
+  );
 
   return (
     <Container
@@ -30,15 +41,19 @@ const App = () => {
       }}
     >
       <BrowserRouter>
-      {/* <HashRouter> */}
+        <ScrollToTop />
         <Navbar toggleSideNav={toggleSideNav} />
         <SimpleGrid columns={5} row={1} spacing={6}>
           <GridItem colSpan={{ base: 5, md: 4 }}>
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/movie/:id" component={Home} />
-              <Route path="/movies/" component={Movies} />
-            </Switch>
+            <Suspense fallback={fallback}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/movie/:slug" element={<Home />} />
+                <Route path="/movies/*" element={<Movies />} />
+                <Route path="/watchlist" element={<Watchlist />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
           </GridItem>
           <GridItem>
             <CategoriesNav
@@ -48,9 +63,11 @@ const App = () => {
             />
           </GridItem>
         </SimpleGrid>
-        <MovieDetails />
+        <Suspense fallback={fallback}>
+          <MovieDetails />
+        </Suspense>
         <Footer />
-      {/* </HashRouter> */}
+        <BackToTop />
       </BrowserRouter>
     </Container>
   );

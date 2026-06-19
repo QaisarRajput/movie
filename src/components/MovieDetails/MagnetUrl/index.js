@@ -1,4 +1,4 @@
-import { Button, Wrap } from '@chakra-ui/react';
+import { Box, HStack, Text, Wrap } from '@chakra-ui/react';
 import { FaMagnet } from 'react-icons/fa';
 
 const trackerUrls = ["udp://open.demonii.com:1337/announce",
@@ -19,19 +19,40 @@ function generateMagnetLink(torrent, movie) {
 
 function MagnetUrl({ torrents , movie}) {
   return (
-    <Wrap spacing={3} wrap="wrap" align="start" w="full">
+    <Wrap spacing={2} wrap="wrap" align="start" w="full">
       {torrents.map((torrent, index) => {
         const magnetLink = generateMagnetLink(torrent, movie);
         return (
-          <Button
+          <Box
             as="a"
             href={magnetLink}
-            colorScheme="green"
-            leftIcon={<FaMagnet />}
+            w={{ base: '108px', sm: '120px' }}
+            h={{ base: '78px', sm: '84px' }}
+            rounded="lg"
+            borderWidth="1px"
+            borderColor="green.300"
+            bgGradient="linear(to-br, green.50, white)"
+            p={2}
+            display="flex"
+            flexDir="column"
+            justifyContent="space-between"
+            transition="all 0.2s ease"
+            _hover={{ transform: 'translateY(-2px)', shadow: 'md', borderColor: 'green.400' }}
             key={index}
           >
-            {`${torrent.quality}.${torrent.type} (${torrent.size})`}
-          </Button>
+            <HStack spacing={1} color="green.600">
+              <FaMagnet />
+              <Text fontSize="10px" fontWeight="bold" letterSpacing="0.4px">
+                MAGNET
+              </Text>
+            </HStack>
+            <Text fontSize="xs" fontWeight="semibold" noOfLines={1}>
+              {`${torrent.quality}.${torrent.type}`}
+            </Text>
+            <Text fontSize="10px" opacity={0.75} noOfLines={1}>
+              {torrent.size}
+            </Text>
+          </Box>
         );
       })}
     </Wrap>
