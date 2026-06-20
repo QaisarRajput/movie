@@ -1,15 +1,41 @@
 {
     "name": "Movie Download Online",
-    "short_name": "Movie Download Online",
+    "short_name": "MovieHub",
+    "description": "Discover trending movies, browse categories, and open rich movie details with torrents and trailers.",
+    "lang": "en",
+    "start_url": "/",
+    "scope": "/",
+    "categories": [
+        "entertainment"
+    ],
     "icons": [
         {
-            "src": "/android-chrome-192x192.png",
+            "src": "/favicons/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "/android-chrome-512x512.png",
+            "src": "/favicons/android-chrome-512x512.png",
             "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicons/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/favicons/screenshot-desktop.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/favicons/screenshot-mobile.png",
+            "sizes": "720x1280",
             "type": "image/png"
         }
     ],
