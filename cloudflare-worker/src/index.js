@@ -12,7 +12,8 @@ function parseBool(value, defaultValue = false) {
 
 function isHtmlRequest(req) {
   const accept = req.headers.get("accept") || "";
-  return accept.includes("text/html");
+  if (!accept) return true;
+  return accept.includes("text/html") || accept.includes("*/*");
 }
 
 function getMovieIdFromUrl(url) {
@@ -107,6 +108,20 @@ function injectIntoHead(html, injected) {
   const closeHead = html.indexOf("</head>");
   if (closeHead === -1) return html;
   return `${html.slice(0, closeHead)}\n${injected}\n${html.slice(closeHead)}`;
+}
+
+function stripExistingSeoTags(html) {
+  if (!html) return html;
+
+  // Remove static/default SEO tags so crawlers don't prefer earlier generic tags.
+  const patterns = [
+    /<title[\s\S]*?<\/title>/gi,
+    /<meta[^>]+name=["'](?:description|title|robots|twitter:card|twitter:title|twitter:description|twitter:image|twitter:url)["'][^>]*>/gi,
+    /<meta[^>]+property=["'](?:og:title|og:description|og:image|og:type|og:url|twitter:title|twitter:description|twitter:image|twitter:url)["'][^>]*>/gi,
+    /<link[^>]+rel=["']canonical["'][^>]*>/gi,
+  ];
+
+  return patterns.reduce((out, regex) => out.replace(regex, ""), html);
 }
 
 function getCanonicalUrl(appOrigin, url) {
@@ -204,7 +219,7 @@ export default {
     const canonicalUrl = getCanonicalUrl(appOrigin, url);
     const payload = getMetaPayload({ movie, defaultImage, canonicalUrl });
 
-    const html = await upstreamRes.text();
+    const html = stripExistingSeoTags(await upstreamRes.text());
     const injected = buildMetaTags(payload);
     const rewritten = injectIntoHead(html, injected);
 
