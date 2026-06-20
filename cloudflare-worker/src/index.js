@@ -186,6 +186,7 @@ export default {
     const debugEnabled = parseBool(env.SEO_DEBUG_ENDPOINT_ENABLED, true);
     const debugLogsEnabled = parseBool(env.SEO_DEBUG_LOGS, false);
     const isBot = isCrawler(userAgent);
+    const isMovieRoute = /^\/movie\//.test(url.pathname) || Boolean(url.searchParams.get("movie_id"));
 
     if (debugEnabled && url.pathname === "/__seo-debug") {
       return handleSeoDebug(url, env, userAgent);
@@ -209,7 +210,13 @@ export default {
       },
     });
 
-    if (request.method !== "GET" || !isBot || !isHtmlRequest(request) || upstreamRes.status >= 400) {
+    const shouldInjectSeo =
+      request.method === "GET" &&
+      isHtmlRequest(request) &&
+      upstreamRes.status < 400 &&
+      (isBot || isMovieRoute);
+
+    if (!shouldInjectSeo) {
       return upstreamRes;
     }
 
@@ -235,6 +242,8 @@ export default {
           at: "seo-injection",
           path: `${url.pathname}${url.search}`,
           userAgent,
+          isBot,
+          isMovieRoute,
           movieId,
           movieFound: Boolean(movie),
           canonicalUrl,
