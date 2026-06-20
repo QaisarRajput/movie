@@ -2,8 +2,10 @@
 
 # dependencies
 /node_modules
+/cloudflare-worker/node_modules
 /.pnp
 .pnp.js
+/cloudflare-worker/.wrangler
 
 # testing
 /coverage
