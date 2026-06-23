@@ -12,6 +12,8 @@ const Home = lazy(() => import("./pages/Home"));
 const Movies = lazy(() => import("./pages/Movies"));
 const Watchlist = lazy(() => import("./pages/Watchlist"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
+const Policies = lazy(() => import("./pages/Policies"));
 const MovieDetails = lazy(() => import("./components/MovieDetails"));
 
 ReactGA.initialize("G-Z090Q2W49P");
@@ -51,6 +53,8 @@ const App = () => {
                 <Route path="/movie/:slug" element={<Home />} />
                 <Route path="/movies/*" element={<Movies />} />
                 <Route path="/watchlist" element={<Watchlist />} />
+                <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+                <Route path="/policies" element={<Policies />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
