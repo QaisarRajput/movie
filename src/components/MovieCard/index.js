@@ -21,7 +21,7 @@ import {
 } from "../../functions/watchlist";
 import { getMoviePathFromParts } from "../../functions/movieUrl";
 
-const MovieCard = ({ img, title, year, rating, isLoading, aspect, id, slug }) => {
+const MovieCard = ({ img, title, year, rating, isLoading, aspect, id, slug, maxCardW = "220px" }) => {
   const [imageIsLoading, setImageIsLoading] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
 
@@ -59,7 +59,7 @@ const MovieCard = ({ img, title, year, rating, isLoading, aspect, id, slug }) =>
       align="start"
       _hover={{ transform: "scale(1.05)" }}
       transition=".25s ease-in-out"
-      maxW="200px"
+      maxW={maxCardW}
       pos="relative"
     >
       <Skeleton rounded="lg" w="full" isLoaded={!isLoading && !imageIsLoading}>

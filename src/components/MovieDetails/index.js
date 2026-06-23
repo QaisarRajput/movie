@@ -8,6 +8,7 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
+  IconButton,
   useDisclosure,
   Image,
   Heading,
@@ -23,6 +24,7 @@ import {
   Center,
   Spinner,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAPIrequest from "../../adapters/useAPIrequest";
@@ -33,6 +35,7 @@ import {
   FaDownload,
   FaLanguage,
   FaInstagram,
+  FaShareAlt,
   FaTwitter,
 } from "react-icons/fa";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
@@ -58,6 +61,7 @@ import { getMovieIdFromPathname } from "../../functions/movieUrl";
 
 const MovieDetails = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -87,6 +91,11 @@ const MovieDetails = () => {
   const overlayFrom = useColorModeValue("rgba(255,255,255,0.98)", "rgba(26,32,44,0.96)");
   const overlayTo = useColorModeValue("rgba(255,255,255,0.72)", "rgba(26,32,44,0.68)");
   const iconShadow = useColorModeValue("0 1px 1px rgba(255,255,255,0.65)", "0 1px 2px rgba(0,0,0,0.45)");
+  const tileBorderColor = useColorModeValue("green.300", "green.500");
+  const tileBg = useColorModeValue("linear(to-br, green.50, white)", "linear(to-br, green.800, green.700)");
+  const tileAccent = useColorModeValue("green.600", "green.100");
+  const tileText = useColorModeValue("gray.800", "whiteAlpha.900");
+  const tileMuted = useColorModeValue("gray.600", "whiteAlpha.800");
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
@@ -227,6 +236,40 @@ const MovieDetails = () => {
     if (!response?.data?.movie) return;
     const saved = toggleWatchlist(response.data.movie);
     setIsSaved(saved);
+  };
+
+  const handleShare = async () => {
+    if (!movie) return;
+
+    const sharePayload = {
+      title: movie.title_long || movie.title,
+      text: movie.summary || movie.description_full || "Check out this movie",
+      url: currentUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(sharePayload);
+        return;
+      }
+
+      await navigator.clipboard.writeText(currentUrl);
+      toast({
+        title: "Link copied",
+        description: "Movie link copied to clipboard.",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Share unavailable",
+        description: "Could not share this movie right now.",
+        status: "warning",
+        duration: 2500,
+        isClosable: true,
+      });
+    }
   };
 
   const currentUrl = typeof window !== "undefined" ? window.location.href : "https://movie.hubs.dpdns.org";
@@ -407,9 +450,18 @@ const MovieDetails = () => {
                   loading="lazy"
                 ></Image>
                 <VStack spacing={3} w="full" align="start">
-                  <Heading as="h1" align="left">
-                    {movie["title_long"] || movie["title"]}
-                  </Heading>
+                  <HStack w="full" justify="space-between" align="start">
+                    <Heading as="h1" align="left" pr={2}>
+                      {movie["title_long"] || movie["title"]}
+                    </Heading>
+                    <IconButton
+                      size="sm"
+                      aria-label="Share movie"
+                      icon={<FaShareAlt />}
+                      onClick={handleShare}
+                      variant="outline"
+                    />
+                  </HStack>
                   <Button
                     size="sm"
                     colorScheme={isSaved ? "orange" : "green"}
@@ -525,8 +577,8 @@ const MovieDetails = () => {
                         h={{ base: "78px", sm: "84px" }}
                         rounded="lg"
                         borderWidth="1px"
-                        borderColor="green.300"
-                        bgGradient="linear(to-br, green.50, white)"
+                        borderColor={tileBorderColor}
+                        bgGradient={tileBg}
                         p={2}
                         display="flex"
                         flexDir="column"
@@ -535,16 +587,16 @@ const MovieDetails = () => {
                         _hover={{ transform: "translateY(-2px)", shadow: "md", borderColor: "green.400" }}
                         key={key}
                       >
-                        <HStack spacing={1} color="green.600">
+                        <HStack spacing={1} color={tileAccent}>
                           <Box as={FaDownload} />
                           <Text fontSize="10px" fontWeight="bold" letterSpacing="0.4px">
                             TORRENT
                           </Text>
                         </HStack>
-                        <Text fontSize="xs" fontWeight="semibold" noOfLines={1}>
+                        <Text fontSize="xs" fontWeight="semibold" noOfLines={1} color={tileText}>
                           {val.quality}.{val.type}
                         </Text>
-                        <Text fontSize="10px" opacity={0.75} noOfLines={1}>
+                        <Text fontSize="10px" opacity={0.85} noOfLines={1} color={tileMuted}>
                           {val.size}
                         </Text>
                       </Box>

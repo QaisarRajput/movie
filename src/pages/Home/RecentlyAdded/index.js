@@ -10,7 +10,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import React from "react";
-import MovieCardSmall from "../../../components/MovieCardSmall";
+import MovieCard from "../../../components/MovieCard";
 import ErrorMessage from "../../../components/ErrorMessage";
 import useAPIrequest from "../../../adapters/useAPIrequest";
 import API_BASE_URL from "../../../config";
@@ -39,12 +39,12 @@ const RecentlyAdded = () => {
         <Box as="hr" w="full" />
       </Stack>
       {error ? <ErrorMessage title="Recently added is unavailable" /> : null}
-      <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4} w="full">
+      <SimpleGrid columns={{ base: 2, xs: 2, sm: 3 }} spacing={6} w="full">
         {response &&
-          response.data.movies.slice(0, 16).map((val, key) => {
+          response.data.movies.slice(0, 6).map((val, key) => {
             return (
               <GridItem key={key} w="full">
-                <MovieCardSmall
+                <MovieCard
                   img={val["medium_cover_image"]}
                   title={val["title_english"]}
                   year={val["year"]}
@@ -52,6 +52,7 @@ const RecentlyAdded = () => {
                   isLoading={loading}
                   rating={val["rating"]}
                   id={val["id"]}
+                  maxCardW={{ base: "148px", sm: "180px", md: "220px" }}
                 />
               </GridItem>
             );

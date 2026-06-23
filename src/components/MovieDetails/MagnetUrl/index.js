@@ -1,4 +1,4 @@
-import { Box, HStack, Text, Wrap } from '@chakra-ui/react';
+import { Box, HStack, Text, Wrap, useColorModeValue } from '@chakra-ui/react';
 import { FaMagnet } from 'react-icons/fa';
 
 const trackerUrls = ["udp://open.demonii.com:1337/announce",
@@ -18,6 +18,12 @@ function generateMagnetLink(torrent, movie) {
 }
 
 function MagnetUrl({ torrents , movie}) {
+  const tileBorderColor = useColorModeValue('green.300', 'green.500');
+  const tileBg = useColorModeValue('linear(to-br, green.50, white)', 'linear(to-br, green.800, green.700)');
+  const tileAccent = useColorModeValue('green.600', 'green.100');
+  const tileText = useColorModeValue('gray.800', 'whiteAlpha.900');
+  const tileMuted = useColorModeValue('gray.600', 'whiteAlpha.800');
+
   return (
     <Wrap spacing={2} wrap="wrap" align="start" w="full">
       {torrents.map((torrent, index) => {
@@ -30,8 +36,8 @@ function MagnetUrl({ torrents , movie}) {
             h={{ base: '78px', sm: '84px' }}
             rounded="lg"
             borderWidth="1px"
-            borderColor="green.300"
-            bgGradient="linear(to-br, green.50, white)"
+            borderColor={tileBorderColor}
+            bgGradient={tileBg}
             p={2}
             display="flex"
             flexDir="column"
@@ -40,16 +46,16 @@ function MagnetUrl({ torrents , movie}) {
             _hover={{ transform: 'translateY(-2px)', shadow: 'md', borderColor: 'green.400' }}
             key={index}
           >
-            <HStack spacing={1} color="green.600">
+            <HStack spacing={1} color={tileAccent}>
               <FaMagnet />
               <Text fontSize="10px" fontWeight="bold" letterSpacing="0.4px">
                 MAGNET
               </Text>
             </HStack>
-            <Text fontSize="xs" fontWeight="semibold" noOfLines={1}>
+            <Text fontSize="xs" fontWeight="semibold" noOfLines={1} color={tileText}>
               {`${torrent.quality}.${torrent.type}`}
             </Text>
-            <Text fontSize="10px" opacity={0.75} noOfLines={1}>
+            <Text fontSize="10px" opacity={0.85} noOfLines={1} color={tileMuted}>
               {torrent.size}
             </Text>
           </Box>
